@@ -60,7 +60,7 @@ int main() {
 	int width, height, nrChannels;
 
 	unsigned char* data = stbi_load(
-			"resources/textures/mafalda.jpg",
+			"resources/textures/mafalda.jpg", // pruebe con ruta absoluta!
 			&width, &height, &nrChannels, 0);
 	if (data != nullptr) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
@@ -70,7 +70,6 @@ int main() {
 		std::cerr << "Can't load texture\n";
 	}
 	stbi_image_free(data);
-	std::cout << width << " " << height << " " << nrChannels << std::endl;
 
 	glBindVertexArray(0);
 
