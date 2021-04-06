@@ -59,6 +59,7 @@ int main() {
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	int width, height, nrChannels;
 
+	stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertido
 	unsigned char* data = stbi_load(
 			"resources/textures/mafalda.jpg", // pruebe con ruta absoluta!
 			&width, &height, &nrChannels, 0);
