@@ -6,10 +6,12 @@ layout (location = 2) in vec2 myTexCoord;
 out vec3 fragColor;
 out vec2 texCoord;
 
-uniform mat4 transform;
+uniform mat4 model;
+uniform mat4 view;
+uniform mat4 proj;
 
 void main() {
-	gl_Position = transform * vec4(vertPos, 1.0);
+	gl_Position = proj * view * model * vec4(vertPos, 1.0);
 	fragColor = vertColor;
 	texCoord = vec2(myTexCoord.x, myTexCoord.y);
 }

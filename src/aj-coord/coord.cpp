@@ -1,6 +1,8 @@
 #include <glutil.h>
 
 const unsigned int FSIZE = sizeof(float);
+const unsigned int SCR_WIDTH = 960;
+const unsigned int SCR_HEIGHT = 540;
 
 /**
  * keyboard input processing
@@ -12,7 +14,7 @@ void processInput(GLFWwindow* window) {
 }
 
 int main() {
-	GLFWwindow* window = glutilInit(3, 3, 960, 540, "Rectangulito");
+	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Rectangulito");
 	Shader* shader = new Shader(); // default: shader.vert and shader.frag
 
 	float vertices[] = {
@@ -78,16 +80,24 @@ int main() {
 		glClearColor(0.1, 0.2, 0.3, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glm::mat4 transform = glm::mat4(1.0); // creates identity matrix
-		transform = glm::translate(transform, glm::vec3(0.5, -0.5, 0.0));
-		float theta = (float)glfwGetTime();
-		transform = glm::rotate(transform, theta, glm::vec3(0.0, 0.0, 1.0));
-
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
 
-		int location = glGetUniformLocation(shader->getProgram(), "transform");
-		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(transform));
+		glm::mat4 model      = glm::mat4(1.0);
+		glm::mat4 view       = glm::mat4(1.0);
+		glm::mat4 projection = glm::mat4(1.0);
+		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
+		view  = glm::translate(view, glm::vec3(0.0, 0.0, -6.0));
+		projection = glm::perspective(glm::radians(45.0f),
+				(float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+
+		unsigned int modelLoc = glGetUniformLocation(shader->getProgram(), "model");
+		unsigned int viewLoc = glGetUniformLocation(shader->getProgram(), "view");
+		unsigned int projLoc = glGetUniformLocation(shader->getProgram(), "proj");
+
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, &projection[0][0]);
 
 		glBindVertexArray(vao);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
