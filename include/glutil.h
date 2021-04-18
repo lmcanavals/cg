@@ -14,20 +14,32 @@
 #include <iostream>
 #include <string>
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+typedef float  f32;
+typedef double f64;
+
+typedef char      i8;
+typedef short int i16;
+typedef int       i32;
+typedef long long i64;
+
+typedef unsigned char      ui8;
+typedef unsigned short int ui16;
+typedef unsigned int       ui32;
+typedef unsigned long long ui64;
+
+void framebuffer_size_callback(GLFWwindow* window, i32 width, i32 height) {
 	glViewport(0, 0, width, height);
 }
 
-GLFWwindow* glutilInit(int major, int minor,
-		int width, int height,
-		const char* title) {
+GLFWwindow* glutilInit(i32 major, i32 minor,
+		i32 width, i32 height,
+		const i8* title) {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, title,
-			nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
 	if (window == nullptr) {
 		std::cerr << "Failed to create GLFW Window\n";
 		glfwTerminate();
@@ -45,10 +57,10 @@ GLFWwindow* glutilInit(int major, int minor,
 }
 
 class Shader {
-	unsigned int pid;
+	ui32 pid;
 
-	int ok;             // check for error status
-	char infoLog[512];  // get error status info
+	i32 ok;             // check for error status
+	i8 infoLog[512];  // get error status info
 
 public:
 	Shader(
@@ -63,8 +75,8 @@ public:
 		std::string fragmentSrc;
 		std::getline(fragmentFile, fragmentSrc, '\0');
 
-		GLuint vertex = mkShader(vertexSrc.c_str(), GL_VERTEX_SHADER);
-		GLuint fragment = mkShader(fragmentSrc.c_str(), GL_FRAGMENT_SHADER);
+		ui32 vertex = mkShader(vertexSrc.c_str(), GL_VERTEX_SHADER);
+		ui32 fragment = mkShader(fragmentSrc.c_str(), GL_FRAGMENT_SHADER);
 
 		pid = glCreateProgram();
 		glAttachShader(pid, vertex);
@@ -87,16 +99,16 @@ public:
 	void useProgram() {
 		glUseProgram(pid);
 	}
-	unsigned int getProgram() { // might need to refactor this later ughhh
+:	ui32 getProgram() { // might need to refactor this later ughhh
 		return pid;
 	}
-	void setMat4(const char name, const glm::mat4& mat) const {
+	void setMat4(const i8* name, const glm::mat4& mat) const {
 		glUniformMatrix4fv(glGetUniformLocation(pid, name, 1, GL_FALSE, &mat[0][0]);
 	}
 
 private:
-	GLuint mkShader(const char* source, GLenum type) {
-		GLuint shader = glCreateShader(type);
+	ui32 mkShader(const i8* source, GLenum type) {
+		ui32 shader = glCreateShader(type);
 		glShaderSource(shader, 1, &source, nullptr);
 		glCompileShader(shader);
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);
