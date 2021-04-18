@@ -15,7 +15,7 @@ void processInput(GLFWwindow* window) {
 
 int main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Rectangulito");
-	Shader* shader = new Shader(); // default: shader.vert and shader.frag
+	Shader* shader = new Shader();
 
 	float vertices[] = {
 		 // posiciones         colores       texturas

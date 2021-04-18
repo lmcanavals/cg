@@ -51,13 +51,15 @@ class Shader {
 	char infoLog[512];  // get error status info
 
 	public:
-	Shader(std::string vertexFileName = "shader.vert",
+	Shader(
+			std::string shaderPath = "bin",
+			std::string vertexFileName = "shader.vert",
 			std::string fragmentFileName = "shader.frag") {
-		std::ifstream vertexFile(vertexFileName);
+		std::ifstream vertexFile(shaderPath + "/" + vertexFileName);
 		std::string vertexSrc;
 		std::getline(vertexFile, vertexSrc, '\0');
 
-		std::ifstream fragmentFile(fragmentFileName);
+		std::ifstream fragmentFile(shaderPath + "/" + fragmentFileName);
 		std::string fragmentSrc;
 		std::getline(fragmentFile, fragmentSrc, '\0');
 

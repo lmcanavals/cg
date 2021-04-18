@@ -15,8 +15,8 @@ all: dirs bin/program
 	$(CC) -c $(CPPFLAGS) -o build/glad.o src/glad.c
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o build/main.o $<
 	$(CXX) -o bin/program build/*.o $(LDFLAGS)
-	$(CP) $(shell dirname $<)/*.vert .
-	$(CP) $(shell dirname $<)/*.frag .
+	$(CP) $(shell dirname $<)/*.vert bin/
+	$(CP) $(shell dirname $<)/*.frag bin/
 
 dirs:
 	@echo Creating folders
