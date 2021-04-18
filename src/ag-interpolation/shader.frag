@@ -5,3 +5,5 @@ void main() {
     color = vec4(fragColor, 1.0);
 }
 
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+

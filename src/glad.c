@@ -1838,3 +1838,5 @@ int gladLoadGLLoader(GLADloadproc load) {
 	return GLVersion.major != 0 || GLVersion.minor != 0;
 }
 
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+

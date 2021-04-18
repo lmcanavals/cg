@@ -16,3 +16,5 @@ void main() {
 	texCoord = vec2(myTexCoord.x, myTexCoord.y);
 }
 
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+

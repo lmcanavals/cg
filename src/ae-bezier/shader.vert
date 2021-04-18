@@ -14,3 +14,5 @@ void main() {
 	gl_PointSize = 3.0;
 }
 
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+

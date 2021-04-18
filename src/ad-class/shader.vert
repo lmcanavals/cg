@@ -4,3 +4,5 @@ void main() {
     gl_Position = vec4(vertPos, 1.0f);
 }
 
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+
