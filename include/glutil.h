@@ -45,12 +45,12 @@ GLFWwindow* glutilInit(int major, int minor,
 }
 
 class Shader {
-	unsigned int program;
+	unsigned int pid;
 
 	int ok;             // check for error status
 	char infoLog[512];  // get error status info
 
-	public:
+public:
 	Shader(
 			std::string shaderPath = "bin",
 			std::string vertexFileName = "shader.vert",
@@ -66,13 +66,13 @@ class Shader {
 		GLuint vertex = mkShader(vertexSrc.c_str(), GL_VERTEX_SHADER);
 		GLuint fragment = mkShader(fragmentSrc.c_str(), GL_FRAGMENT_SHADER);
 
-		program = glCreateProgram();
-		glAttachShader(program, vertex);
-		glAttachShader(program, fragment);
-		glLinkProgram(program);
-		glGetProgramiv(program, GL_LINK_STATUS, &ok);
+		pid = glCreateProgram();
+		glAttachShader(pid, vertex);
+		glAttachShader(pid, fragment);
+		glLinkProgram(pid);
+		glGetProgramiv(pid, GL_LINK_STATUS, &ok);
 		if (!ok) {
-			glGetProgramInfoLog(program, 512, nullptr, infoLog);
+			glGetProgramInfoLog(pid, 512, nullptr, infoLog);
 			std::cout << "Error::shader::program::link_failed\n"
 				<< infoLog << std::endl;
 		}
@@ -81,17 +81,20 @@ class Shader {
 		glDeleteShader(fragment);
 	}
 	~Shader() {
-		glDeleteProgram(program);
+		glDeleteProgram(pid);
 		glfwTerminate();
 	}
 	void useProgram() {
-		glUseProgram(program);
+		glUseProgram(pid);
 	}
-	unsigned int getProgram() {
-		return program;
+	unsigned int getProgram() { // might need to refactor this later ughhh
+		return pid;
+	}
+	void setMat4(const char name, const glm::mat4& mat) const {
+		glUniformMatrix4fv(glGetUniformLocation(pid, name, 1, GL_FALSE, &mat[0][0]);
 	}
 
-	private:
+private:
 	GLuint mkShader(const char* source, GLenum type) {
 		GLuint shader = glCreateShader(type);
 		glShaderSource(shader, 1, &source, nullptr);
@@ -108,3 +111,6 @@ class Shader {
 };
 
 #endif
+
+/* vim: set tabstop=2:softtabstop=2:shiftwidth=2:noexpandtab */
+
