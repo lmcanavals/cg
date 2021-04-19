@@ -11,12 +11,15 @@ CPPFLAGS += -Iinclude
 
 all: dirs bin/program
 
-%.: src/%/*.cpp dirs
-	$(CC) -c $(CPPFLAGS) -o build/glad.o src/glad.c
+%.: src/%/*.cpp dirs build/glad.o
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o build/main.o $<
 	$(CXX) -o bin/program build/*.o $(LDFLAGS)
 	$(CP) $(shell dirname $<)/*.vert bin/
 	$(CP) $(shell dirname $<)/*.frag bin/
+
+build/glad.o:
+	$(CC) -c $(CPPFLAGS) -o build/glad.o src/glad.c
+	$(CC) -c $(CPPFLAGS) -o build/stb_image.o src/stb_image.c
 
 dirs:
 	@echo Creating folders
