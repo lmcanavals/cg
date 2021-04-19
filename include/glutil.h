@@ -8,6 +8,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <stb_image.h>
+#include <path.h>
 
 #include <fstream>
 #include <iostream>
@@ -57,20 +58,22 @@ GLFWwindow* glutilInit(i32 major, i32 minor,
 
 class Shader {
 	ui32 pid;
+	Path* path;
 
 	i32 ok;             // check for error status
 	i8 infoLog[512];  // get error status info
 
 public:
-	Shader(
-			std::string shaderPath = "bin",
-			std::string vertexFileName = "shader.vert",
-			std::string fragmentFileName = "shader.frag") {
-		std::ifstream vertexFile(shaderPath + "/" + vertexFileName);
+	Shader(std::string shadersPath = "bin",
+		     std::string texturesPath = "resources/textures",
+		     std::string vertexFileName = "shader.vert",
+		     std::string fragmentFileName = "shader.frag")
+			: path(new Path(shadersPath, texturesPath)) {
+		std::ifstream vertexFile(path->sp(vertexFileName));
 		std::string vertexSrc;
 		std::getline(vertexFile, vertexSrc, '\0');
 
-		std::ifstream fragmentFile(shaderPath + "/" + fragmentFileName);
+		std::ifstream fragmentFile(path->sp(fragmentFileName));
 		std::string fragmentSrc;
 		std::getline(fragmentFile, fragmentSrc, '\0');
 
@@ -101,8 +104,36 @@ public:
 	ui32 getProgram() { // might need to refactor this later ughhh
 		return pid;
 	}
+	// Set uniforms
 	void setMat4(const i8* name, const glm::mat4& mat) const {
 		glUniformMatrix4fv(glGetUniformLocation(pid, name), 1, GL_FALSE, &mat[0][0]);
+	}
+	// Texture loading
+	ui32 loadTexture(const std::string& textureFile) {
+		ui32 texture;
+		std::string fileName = path->tp(textureFile);
+
+		glGenTextures(1, &texture);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		
+		i32 width, height, nrChannels;
+
+		stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertio
+		ui8* data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
+		if (data != nullptr) {
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
+			             GL_RGB, GL_UNSIGNED_BYTE, data);
+			glGenerateMipmap(GL_TEXTURE_2D);
+		} else {
+			std::cerr << "Can't load texture\n";
+		}
+		stbi_image_free(data);
+
+		return texture;
 	}
 
 private:
