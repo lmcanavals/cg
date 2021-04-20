@@ -109,7 +109,8 @@ public:
 		glUniformMatrix4fv(glGetUniformLocation(pid, name), 1, GL_FALSE, &mat[0][0]);
 	}
 	// Texture loading
-	ui32 loadTexture(const std::string& textureFile) {
+	ui32 loadTexture(const std::string& textureFile,
+		               i32 param=GL_LINEAR) {
 		ui32 texture;
 		std::string fileName = path->tp(textureFile);
 
@@ -117,8 +118,8 @@ public:
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
 		
 		i32 width, height, nrChannels;
 
