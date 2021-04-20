@@ -105,6 +105,9 @@ public:
 		return pid;
 	}
 	// Set uniforms
+	void setI32(const i8* name, const int& i) const {
+		glUniform1i(glGetUniformLocation(pid, name), i);
+	}
 	void setMat4(const i8* name, const glm::mat4& mat) const {
 		glUniformMatrix4fv(glGetUniformLocation(pid, name), 1, GL_FALSE, &mat[0][0]);
 	}
