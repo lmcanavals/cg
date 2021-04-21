@@ -1,1 +1,4 @@
-# cg
+# Computer Graphics
+
+and stuff
+
