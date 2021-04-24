@@ -11,7 +11,7 @@ CPPFLAGS += -Iinclude
 
 all: dirs bin/program
 
-%.: src/%/*.cpp dirs build/glad.o
+src/%.: src/%/*.cpp dirs build/glad.o
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o build/main.o $<
 	$(CXX) -o bin/program build/*.o $(LDFLAGS)
 	$(CP) $(shell dirname $<)/*.vert bin/
