@@ -113,7 +113,7 @@ i32 main() {
 	shader->useProgram();
 
 	// Projection doesn't need to change on every frame.
-	float alpha = glm::radians(45.0f);
+	f32 alpha = glm::radians(45.0f);
 	glm::mat4 projection = glm::perspective(alpha, ASPECT, 0.1f, 100.0f);
 	shader->setMat4("proj", projection);
 
@@ -125,8 +125,8 @@ i32 main() {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
 
-		float camx = sin(glfwGetTime()) * 10.0f;
-		float camz = cos(glfwGetTime()) * 10.0f;
+		f32 camx = sin(glfwGetTime()) * 10.0f;
+		f32 camz = cos(glfwGetTime()) * 10.0f;
 
 		glm::mat4 view       = glm::mat4(1.0f);
 		view  = glm::lookAt(glm::vec3(camx, 0.0f, camz),
