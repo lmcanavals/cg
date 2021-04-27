@@ -11,6 +11,13 @@ const ui32 SCR_WIDTH = 960;
 const ui32 SCR_HEIGHT = 540;
 const f32  ASPECT = (f32)SCR_WIDTH / (f32)SCR_HEIGHT;
 
+glm::vec3 position = glm::vec3(0.0f, 0.0f, 4.0f);
+glm::vec3 front    = glm::vec3(0.0f, 0.0f, -1.0f);
+glm::vec3 up       = glm::vec3(0.0f, 1.0f, 0.0f);
+
+f32 deltaTime = 0.0f;
+f32 lastFrame = 0.0f;
+
 f32* makeVertices(ui32 xblocks, ui32 yblocks, ui32 comps,
 	                f32 from, f32 to) {
 	f32* vertices = new f32[xblocks * yblocks * comps];
@@ -62,6 +69,19 @@ ui32* makeIdxs(ui32 xblocks, ui32 yblocks) {
 void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
+	}
+	f32 speed = 2.5 * deltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+		position += speed * front;
+	}
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+		position -= glm::normalize(glm::cross(front, up)) * speed;
+	}
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+		position -= speed * front;
+	}
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+		position += glm::normalize(glm::cross(front, up)) * speed;
 	}
 }
 
@@ -118,6 +138,10 @@ i32 main() {
 	shader->setMat4("proj", projection);
 
 	while (!glfwWindowShouldClose(window)) {
+		float currentFrame = glfwGetTime();
+		deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
 		processInput(window);
 		glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -125,13 +149,8 @@ i32 main() {
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
 
-		f32 camx = sin(glfwGetTime()) * 10.0f;
-		f32 camz = cos(glfwGetTime()) * 10.0f;
-
 		glm::mat4 view       = glm::mat4(1.0f);
-		view  = glm::lookAt(glm::vec3(camx, 0.0f, camz),
-		                    glm::vec3(0.0f, 0.0f, 0.0f),
-		                    glm::vec3(0.0f, 1.0f, 0.0f));
+		view  = glm::lookAt(position, position + front, up);
 		shader->setMat4("view", view);
 
 		glBindVertexArray(vao);

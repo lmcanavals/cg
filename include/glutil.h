@@ -32,14 +32,17 @@ void framebuffer_size_callback(GLFWwindow* window, i32 width, i32 height) {
 }
 
 GLFWwindow* glutilInit(i32 major, i32 minor,
-		i32 width, i32 height,
-		const i8* title) {
+	                     i32 width, i32 height,
+	                     const i8* title,
+	                     i32 screenWidth=1366,
+	                     i32 screenHeight=768) {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+	glfwSetWindowPos(window, screenWidth/2 - width/2, screenHeight/2 - height/2);
 	if (window == nullptr) {
 		std::cerr << "Failed to create GLFW Window\n";
 		glfwTerminate();
