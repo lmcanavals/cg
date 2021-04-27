@@ -15,6 +15,13 @@ glm::vec3 position = glm::vec3(0.0f, 0.0f, 4.0f);
 glm::vec3 front    = glm::vec3(0.0f, 0.0f, -1.0f);
 glm::vec3 up       = glm::vec3(0.0f, 1.0f, 0.0f);
 
+bool firstMouse = true;
+f32 yaw   = -90.0f;
+f32 pitch = 0.0f;
+f32 lastx = SCR_WIDTH / 2.0f;
+f32 lasty = SCR_HEIGHT / 2.0f;
+f32 fov   = 45.0f;
+
 f32 deltaTime = 0.0f;
 f32 lastFrame = 0.0f;
 
@@ -85,8 +92,51 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
+void mouse_callback(GLFWwindow*, f64 xpos, f64 ypos) {
+	if (firstMouse) {
+		lastx = xpos;
+		lasty = ypos;
+		firstMouse = false;
+	}
+	f32 xoffset = xpos - lastx;
+	f32 yoffset = lasty - ypos;
+
+	lastx = xpos;
+	lasty = ypos;
+
+	f32 sensitivity = 0.1f;
+	xoffset *= sensitivity;
+	yoffset *= sensitivity;
+
+	yaw   += xoffset;
+	pitch += yoffset;
+
+	if (pitch > 89.0f) {
+		pitch = 89.0f;
+	} else if (pitch < -89.0f) {
+		pitch = -89.0f;
+	}
+
+	glm::vec3 f;
+	f.x   = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+	f.y   = sin(glm::radians(pitch));
+	f.z   = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+	front = glm::normalize(f);
+}
+
+void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
+	fov -= (f32)yoffset; // zoom
+	if (fov < 1.0f) {
+		fov = 1.0f;
+	} else if (fov > 45.0f) {
+		fov = 45.0f;
+	}
+}
+
 i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Terrain?");
+	glfwSetCursorPosCallback(window, mouse_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 	Shader* shader = new Shader();
 
 	ui32 xblocks = 20, yblocks = 20, comps = 6;
@@ -130,12 +180,6 @@ i32 main() {
 	glEnableVertexAttribArray(1);
 
 	glEnable(GL_DEPTH_TEST);
-	shader->useProgram();
-
-	// Projection doesn't need to change on every frame.
-	f32 alpha = glm::radians(45.0f);
-	glm::mat4 projection = glm::perspective(alpha, ASPECT, 0.1f, 100.0f);
-	shader->setMat4("proj", projection);
 
 	while (!glfwWindowShouldClose(window)) {
 		float currentFrame = glfwGetTime();
@@ -148,6 +192,9 @@ i32 main() {
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
+
+		glm::mat4 projection = glm::perspective(glm::radians(fov), ASPECT, 0.1f, 100.0f);
+		shader->setMat4("proj", projection);
 
 		glm::mat4 view       = glm::mat4(1.0f);
 		view  = glm::lookAt(position, position + front, up);
