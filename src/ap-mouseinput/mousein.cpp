@@ -39,8 +39,8 @@ f32* makeVertices(ui32 xblocks, ui32 yblocks, ui32 comps,
 		c[0] = from;                         // x component
 		ui32 offx = x*yblocks*comps;
 		for (ui32 y = 0; y < yblocks; ++y) {
-			c[1] = sin(c[0]*c[2]*3.0f);  // y component
-			c[3] = 1.0f - c[1] / 2.0f + 0.5f;
+			c[1] = sin(c[0]*c[2]*1.5f);  // y component
+			c[3] = 1.0f - c[1]*2.0f / 2.0f + 0.5f;
 			ui32 offy = offx + y * comps;
 			for (ui32 k = 0; k < comps; ++k) {
 				vertices[offy + k] = c[k];
@@ -205,7 +205,7 @@ i32 main() {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, positions[i]);
 			f32 theta = (f32)glfwGetTime();
-			model = glm::rotate(model, theta, glm::vec3(0.3f, 0.6f, 0.9f));
+			//model = glm::rotate(model, theta, glm::vec3(0.3f, 0.6f, 0.9f));
 			shader->setMat4("model", model);
 
 			glDrawElements(GL_TRIANGLES, (xblocks-1)*(yblocks-1)*6, GL_UNSIGNED_INT, 0);
