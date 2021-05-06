@@ -111,9 +111,13 @@ public:
 	void setI32(const i8* name, const int& i) const {
 		glUniform1i(glGetUniformLocation(pid, name), i);
 	}
+	void setVec3(const i8* name, f32 a, f32 b, f32 c) const {
+		glUniform3f(glGetUniformLocation(pid, name), a, b, c);
+	}
 	void setMat4(const i8* name, const glm::mat4& mat) const {
 		glUniformMatrix4fv(glGetUniformLocation(pid, name), 1, GL_FALSE, &mat[0][0]);
 	}
+
 	// Texture loading
 	ui32 loadTexture(const std::string& textureFile,
 		               i32 param=GL_LINEAR) {
