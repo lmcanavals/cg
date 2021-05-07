@@ -28,5 +28,5 @@ dirs:
 
 clean:
 	@echo Removing build files
-	$(RM) build bin *.vert *.frag
+	$(RM) build bin
 
