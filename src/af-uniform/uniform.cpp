@@ -1,7 +1,7 @@
 #include <glutil.h>
 #include <math.h>
 
-const unsigned int FSIZE = sizeof(float);
+const u32 FSIZE = sizeof(f32);
 
 /**
  * keyboard input processing
@@ -12,20 +12,20 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-int main() {
+i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, 960, 540, "Rectangulito");
 	Shader* shader = new Shader(); // default: shader.vert and shader.frag
 
-	float vertices[] = {
+	f32 vertices[] = {
 		 0.5,  0.5,  0.0,
 		 0.5, -0.5,  0.0,
 		-0.5, -0.5,  0.0,
 		-0.5,  0.5,  0.0 };
-	unsigned int idxs[] = {
+	u32 idxs[] = {
 		0, 1, 3,
 		1, 2, 3 };
 
-	unsigned int vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -38,7 +38,7 @@ int main() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(idxs), idxs, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3*sizeof(f32), (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glBindVertexArray(0);
@@ -52,9 +52,9 @@ int main() {
 		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
 
-		float timeValue = glfwGetTime();
-		float greenValue = sin(timeValue) / 2.0 + 0.5;
-		int location = glGetUniformLocation(shader->getProgram(), "myColor");
+		f32 timeValue = glfwGetTime();
+		f32 greenValue = sin(timeValue) / 2.0 + 0.5;
+		i32 location = glGetUniformLocation(shader->getProgram(), "myColor");
 		glUniform4f(location, 0.0, greenValue, 0.0, 1.0);
 
 		glBindVertexArray(vao);

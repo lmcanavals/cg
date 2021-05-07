@@ -6,8 +6,8 @@ enum CameraMovement {
 };
 
 class Cam {
-	glm::vec3 position;
-	glm::vec3 front;
+	glm::vec3 pos;
+	glm::vec3 lookat;
 	glm::vec3 up;
 	glm::vec3 right;
 	glm::vec3 worldUp;
@@ -22,14 +22,14 @@ public:
 			f32 fx    =   0.0f, f32 fy    =   0.0f, f32 fz    =  -1.0f,
 			f32 ux    =   0.0f, f32 uy    =   1.0f, f32 uz    =   0.0f,
 			f32 yaw   = -90.0f, f32 pitch =   0.0f, f32 zoom  =  45.0f)
-			:	position({px, py, pz}), front({fx, fy, fz}), up({ux, uy, uz}),
+			:	pos({px, py, pz}), lookat({fx, fy, fz}), up({ux, uy, uz}),
 				worldUp({ux, uy, uz}), yaw(yaw), pitch(pitch), zoom(zoom),
 				mouseSensitivity(0.1f), speed(2.5f) {
 		updateVectors();
 	}
 
 	glm::mat4 getViewM4() {
-		return glm::lookAt(position, position + front, up);
+		return glm::lookAt(pos, pos + lookat, up);
 	}
 	f32 getZoom() {
 		return glm::radians(zoom);
@@ -38,13 +38,13 @@ public:
 	void processKeyboard(CameraMovement direction, f32 deltaTime) {
 		f32 velocity = speed * deltaTime;
 		if (direction == FORWARD) {
-			position += front * velocity;
+			pos += lookat * velocity;
 		} else if (direction == BACKWARD) {
-			position -= front * velocity;
+			pos -= lookat * velocity;
 		} else if (direction == LEFT) {
-			position -= right * velocity;
+			pos -= right * velocity;
 		} else if (direction == RIGHT) {
-			position += right * velocity;
+			pos += right * velocity;
 		}
 	}
 	void processMouse(f32 xoffset, f32 yoffset, bool constrainPitch = true) {
@@ -70,14 +70,14 @@ public:
 
 private:
 	void updateVectors() {
-		glm::vec3 f;
+		glm::vec3 temp;
 
-		f.x   = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
-		f.y   = sin(glm::radians(pitch));
-		f.z   = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
-		front = glm::normalize(f);
-		right = glm::normalize(glm::cross(front, worldUp));
-		up    = glm::normalize(glm::cross(right, front));
+		temp.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+		temp.y = sin(glm::radians(pitch));
+		temp.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+		lookat = glm::normalize(temp);
+		right  = glm::normalize(glm::cross(lookat, worldUp));
+		up     = glm::normalize(glm::cross(right, lookat));
 	}
 };
 

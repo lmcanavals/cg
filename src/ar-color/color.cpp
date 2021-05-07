@@ -6,10 +6,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-const ui32 FSIZE      = sizeof(f32);
-const ui32 ISIZE      = sizeof(i32);
-const ui32 SCR_WIDTH  = 1280;
-const ui32 SCR_HEIGHT = 720;
+const u32 FSIZE      = sizeof(f32);
+const u32 ISIZE      = sizeof(i32);
+const u32 SCR_WIDTH  = 1280;
+const u32 SCR_HEIGHT = 720;
 const f32  ASPECT     = (f32)SCR_WIDTH / (f32)SCR_HEIGHT;
 
 glm::vec3 lightPos(1.2f, 1.0f, 2.0f);
@@ -104,10 +104,10 @@ i32 main() {
 
 	Cube* cubex = new Cube();
 
-	ui32 n = 1;
+	u32 n = 1;
 	std::vector<glm::vec3> positions(n*n);
-	for (ui32 i = 0; i < n; ++i) {
-		for (ui32 j = 0; j < n; ++j) {
+	for (u32 i = 0; i < n; ++i) {
+		for (u32 j = 0; j < n; ++j) {
 			f32 x = i - n/2.0f;
 			f32 z = j - n/2.0f;
 			f32 y = 0.0f;// x*x / 10 - z*z / 10;
@@ -115,7 +115,7 @@ i32 main() {
 		}
 	}
 
-	ui32 cubeVao, lightCubeVao, vbo, ebo;
+	u32 cubeVao, lightCubeVao, vbo, ebo;
 	glGenVertexArrays(1, &cubeVao);
 	glGenVertexArrays(1, &lightCubeVao);
 	glGenBuffers(1, &vbo);
@@ -144,7 +144,7 @@ i32 main() {
 	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window)) {
-		float currentFrame = glfwGetTime();
+		f32 currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 

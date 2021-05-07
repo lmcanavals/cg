@@ -3,9 +3,9 @@
 using namespace glm;
 using namespace std;
 
-const ui32 FSIZE = sizeof(float);
-const ui32 SCR_WIDTH = 960;
-const ui32 SCR_HEIGHT = 540;
+const u32 FSIZE = sizeof(f32);
+const u32 SCR_WIDTH = 960;
+const u32 SCR_HEIGHT = 540;
 const f32  ASPECT = 16.0f / 9.0f;
 
 /**
@@ -17,7 +17,7 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-int main() {
+i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Cubito");
 	Shader* shader = new Shader("bin", "resources/textures");
 
@@ -41,7 +41,7 @@ int main() {
 		 0.5f,  0.5f, -0.5f,   1.0f, 0.0, 0.0,   1.0f, 1.0f,  // 13
 		-0.5f, -0.5f, -0.5f,   1.0f, 0.0, 0.0,   0.0f, 1.0f,  // 14
 		 0.5f, -0.5f, -0.5f,   1.0f, 0.0, 0.0,   1.0f, 1.0f}; // 15
-	ui32 idxs[] = {
+	u32 idxs[] = {
 		 0,  1,  2,   1,  2,  3,
 		 8,  9, 12,   9, 12, 13,
 		 1,  5,  3,   3,  5,  7,
@@ -49,7 +49,7 @@ int main() {
 		 0,  4,  6,   0,  2,  6,
 		 4,  5,  6,   5,  6,  7};
 
-	ui32 vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -72,8 +72,8 @@ int main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 
-	ui32 texture1 = shader->loadTexture("mafalda.jpg");
-	ui32 texture2 = shader->loadTexture("container.jpg");
+	u32 texture1 = shader->loadTexture("mafalda.jpg");
+	u32 texture2 = shader->loadTexture("container.jpg");
 
 	glBindVertexArray(0);
 

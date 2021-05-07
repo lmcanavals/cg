@@ -6,9 +6,9 @@
 using namespace glm;
 using namespace std;
 
-const ui32 FSIZE = sizeof(f32);
-const ui32 SCR_WIDTH = 960;
-const ui32 SCR_HEIGHT = 540;
+const u32 FSIZE = sizeof(f32);
+const u32 SCR_WIDTH = 960;
+const u32 SCR_HEIGHT = 540;
 const f32  ASPECT = 16.0f / 9.0f;
 
 /**
@@ -20,7 +20,7 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-int main() {
+i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Cubito");
 	Shader* shader = new Shader("bin", "resources/textures");
 
@@ -44,7 +44,7 @@ int main() {
 		 0.5f,  0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,  // 13
 		-0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   0.0f, 1.0f,  // 14
 		 0.5f, -0.5f, -0.5f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f}; // 15
-	ui32 idxs[] = {
+	u32 idxs[] = {
 		 0,  1,  2,   1,  2,  3,
 		 8,  9, 12,   9, 12, 13,
 		 1,  5,  3,   3,  5,  7,
@@ -58,11 +58,11 @@ int main() {
 		f32 d = b - a;
 		return (rand() % 1000) / 1000.0f * d + a;
 	};
-	for (ui32 i = 0; i < positions.size(); ++i) {
+	for (u32 i = 0; i < positions.size(); ++i) {
 		positions[i]=vec3(rndb(-3.0f, 3.0f), rndb(-2.0f, 2.0f), rndb(-10.0f, 0.0f));
 	}
 
-	ui32 vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -85,8 +85,8 @@ int main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 
-	ui32 texture0 = shader->loadTexture("mafalda.jpg");
-	ui32 texture1 = shader->loadTexture("rubik.jpg");
+	u32 texture0 = shader->loadTexture("mafalda.jpg");
+	u32 texture1 = shader->loadTexture("rubik.jpg");
 
 	shader->useProgram();
 	shader->setI32("texture0", 0);
@@ -117,7 +117,7 @@ int main() {
 		shader->setMat4("proj", projection);
 
 		glBindVertexArray(vao);
-		for (ui32 i = 0; i < positions.size(); ++i) {
+		for (u32 i = 0; i < positions.size(); ++i) {
 			mat4 model      = mat4(1.0f);
 			model = translate(model, positions[i]);
 			f32 theta = (f32)glfwGetTime();

@@ -5,30 +5,30 @@
 #include <stdlib.h>
 #include <time.h>
 
-const ui32 FSIZE = sizeof(f32);
-const ui32 ISIZE = sizeof(i32);
-const ui32 SCR_WIDTH = 960;
-const ui32 SCR_HEIGHT = 540;
+const u32 FSIZE = sizeof(f32);
+const u32 ISIZE = sizeof(i32);
+const u32 SCR_WIDTH = 960;
+const u32 SCR_HEIGHT = 540;
 const f32  ASPECT = (f32)SCR_WIDTH / (f32)SCR_HEIGHT;
 
-f32* makeVertices(ui32 xblocks, ui32 yblocks, ui32 comps,
+f32* makeVertices(u32 xblocks, u32 yblocks, u32 comps,
 	                f32 from, f32 to) {
 	f32* vertices = new f32[xblocks * yblocks * comps];
 	f32 incx = (to - from) / (xblocks-1);
 	f32 incy = (to - from) / (yblocks-1);
 	f32* c = new f32[comps];
-	for (ui32 i = 0; i < comps; ++i) {
+	for (u32 i = 0; i < comps; ++i) {
 		c[i] = 0.0f;
 	}
 	c[2] = to;                             // z component
-	for (ui32 x = 0; x < xblocks; ++x) {
+	for (u32 x = 0; x < xblocks; ++x) {
 		c[0] = from;                         // x component
-		ui32 offx = x*yblocks*comps;
-		for (ui32 y = 0; y < yblocks; ++y) {
+		u32 offx = x*yblocks*comps;
+		for (u32 y = 0; y < yblocks; ++y) {
 			c[1] = sin(c[0]*c[2]*3.0f);  // y component
 			c[3] = 1.0f - c[1] / 2.0f + 0.5f;
-			ui32 offy = offx + y * comps;
-			for (ui32 k = 0; k < comps; ++k) {
+			u32 offy = offx + y * comps;
+			for (u32 k = 0; k < comps; ++k) {
 				vertices[offy + k] = c[k];
 			}
 			c[0] += incy;
@@ -38,13 +38,13 @@ f32* makeVertices(ui32 xblocks, ui32 yblocks, ui32 comps,
 	return vertices;
 }
 
-ui32* makeIdxs(ui32 xblocks, ui32 yblocks) {
-	ui32* idxs = new ui32[(xblocks-1)*(yblocks-1)*6];
+u32* makeIdxs(u32 xblocks, u32 yblocks) {
+	u32* idxs = new u32[(xblocks-1)*(yblocks-1)*6];
 
-	for (ui32 x = 1; x < xblocks; ++x) {
-		ui32 offx = (x-1) * (yblocks - 1) * 6;
-		for (ui32 y = 1; y < yblocks; ++y) {
-			ui32 offy = offx + (y-1) * 6;
+	for (u32 x = 1; x < xblocks; ++x) {
+		u32 offx = (x-1) * (yblocks - 1) * 6;
+		for (u32 y = 1; y < yblocks; ++y) {
+			u32 offy = offx + (y-1) * 6;
 			idxs[offy + 0] = (x-1) * yblocks + y - 1;
 			idxs[offy + 1] = (x-1) * yblocks + y;
 			idxs[offy + 2] = x * yblocks + y - 1;
@@ -69,11 +69,11 @@ i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Terrain?");
 	Shader* shader = new Shader();
 
-	ui32 xblocks = 20, yblocks = 20, comps = 6;
+	u32 xblocks = 20, yblocks = 20, comps = 6;
 	f32 from = -1.0f, to = 1.0f;
 
 	f32* vertices = makeVertices(xblocks, yblocks, comps, from, to);
-	ui32* idxs    = makeIdxs(xblocks, yblocks);
+	u32* idxs    = makeIdxs(xblocks, yblocks);
 
 	srand(time(0));
 	std::vector<glm::vec3> positions(10);
@@ -81,13 +81,13 @@ i32 main() {
 		f32 d = b - a;
 		return (rand() % 1000) / 1000.0f * d + a;
 	};
-	for (ui32 i = 0; i < positions.size(); ++i) {
+	for (u32 i = 0; i < positions.size(); ++i) {
 		positions[i] = glm::vec3(rndb(-3.0f, 3.0f),
 		                         rndb(-2.0f, 2.0f),
 		                         rndb(-10.0f, 0.0f));
 	}
 
-	ui32 vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -95,11 +95,11 @@ i32 main() {
 	glBindVertexArray(vao);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	ui32 vsize = FSIZE*(xblocks*yblocks*comps);
+	u32 vsize = FSIZE*(xblocks*yblocks*comps);
 	glBufferData(GL_ARRAY_BUFFER, vsize, vertices, GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	ui32 isize = ISIZE*(xblocks-1)*(yblocks-1)*6;
+	u32 isize = ISIZE*(xblocks-1)*(yblocks-1)*6;
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, isize, idxs, GL_STATIC_DRAW);
 
 	// posiciones
@@ -135,7 +135,7 @@ i32 main() {
 		shader->setMat4("view", view);
 
 		glBindVertexArray(vao);
-		for (ui32 i = 0; i < positions.size(); ++i) {
+		for (u32 i = 0; i < positions.size(); ++i) {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, positions[i]);
 			f32 theta = (f32)glfwGetTime();

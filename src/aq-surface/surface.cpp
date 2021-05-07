@@ -5,10 +5,10 @@
 #include <stdlib.h>
 #include <time.h>
 
-const ui32 FSIZE      = sizeof(f32);
-const ui32 ISIZE      = sizeof(i32);
-const ui32 SCR_WIDTH  = 1280;
-const ui32 SCR_HEIGHT = 720;
+const u32 FSIZE      = sizeof(f32);
+const u32 ISIZE      = sizeof(i32);
+const u32 SCR_WIDTH  = 1280;
+const u32 SCR_HEIGHT = 720;
 const f32  ASPECT     = (f32)SCR_WIDTH / (f32)SCR_HEIGHT;
 
 glm::vec3 position = glm::vec3(0.0f, 3.0f, 4.0f);
@@ -31,12 +31,12 @@ class Cube {
 	f32   height;
 	f32   depth;
 	f32*  vertices;
-	ui32* indices;
+	u32* indices;
 
 public:
 	Cube(f32 width=1.0f, f32 height=1.0f, f32 depth=1.0f)
 			: width(width), height(height), depth(depth),
-			  vertices(new f32[16*8]), indices(new ui32[6*6]) {
+			  vertices(new f32[16*8]), indices(new u32[6*6]) {
 		f32 wm = width / 2.0f;
 		f32 hm = height / 2.0f;
 		f32 dm = depth / 2.0f;
@@ -59,17 +59,17 @@ public:
 			 wm,  hm, -dm,   1.0f, 0.0, 0.0,   1.0f, 1.0f,  // 13
 			-wm, -hm, -dm,   1.0f, 0.0, 0.0,   0.0f, 1.0f,  // 14
 			 wm, -hm, -dm,   1.0f, 0.0, 0.0,   1.0f, 1.0f}; // 15
-		for (ui32 i = 0; i < 16*8; ++i) {
+		for (u32 i = 0; i < 16*8; ++i) {
 			vertices[i] = temp[i];
 		}
-		ui32 temp2[] = {
+		u32 temp2[] = {
 			 0,  1,  2,   1,  2,  3,
 			 8,  9, 12,   9, 12, 13,
 			 1,  5,  3,   3,  5,  7,
 			11, 14, 15,  10, 11, 14,
 			 0,  4,  6,   0,  2,  6,
 			 4,  5,  6,   5,  6,  7};
-		for (ui32 i = 0; i < 6*6; ++i) {
+		for (u32 i = 0; i < 6*6; ++i) {
 			indices[i] = temp2[i];
 		}
 	}
@@ -80,13 +80,13 @@ public:
 	f32* getVertices() {
 		return vertices;
 	}
-	ui32* getIndices() {
+	u32* getIndices() {
 		return indices;
 	}
-	ui32 getVSize() {
+	u32 getVSize() {
 		return 16*8;
 	}
-	ui32 getISize() {
+	u32 getISize() {
 		return 6*6;
 	}
 };
@@ -163,10 +163,10 @@ i32 main() {
 	Cube* cubex = new Cube();
 
 	srand(time(0));
-	ui32 n = 100;
+	u32 n = 100;
 	std::vector<glm::vec3> positions(n*n);
-	for (ui32 i = 0; i < n; ++i) {
-		for (ui32 j = 0; j < n; ++j) {
+	for (u32 i = 0; i < n; ++i) {
+		for (u32 j = 0; j < n; ++j) {
 			f32 x = i - n/2.0f;
 			f32 z = j - n/2.0f;
 			f32 y = 0.0f;// x*x / 10 - z*z / 10;
@@ -174,7 +174,7 @@ i32 main() {
 		}
 	}
 
-	ui32 vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -199,12 +199,12 @@ i32 main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 	
-	ui32 texture1 = shader->loadTexture("container.jpg");
+	u32 texture1 = shader->loadTexture("container.jpg");
 
 	glEnable(GL_DEPTH_TEST);
 
 	while (!glfwWindowShouldClose(window)) {
-		float currentFrame = glfwGetTime();
+		f32 currentFrame = glfwGetTime();
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
@@ -225,7 +225,7 @@ i32 main() {
 		shader->setMat4("view", view);
 
 		glBindVertexArray(vao);
-		for (ui32 i = 0; i < positions.size(); ++i) {
+		for (u32 i = 0; i < positions.size(); ++i) {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, positions[i]);
 			//f32 theta = (f32)glfwGetTime();

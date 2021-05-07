@@ -14,33 +14,30 @@
 #include <iostream>
 #include <string>
 
-typedef float              f32;
-typedef double             f64;
-typedef char               i8;
-typedef short int          i16;
-typedef int                i32;
-typedef long long          i64;
-typedef unsigned char      u8;
+typedef              float f32;
+typedef             double f64;
+typedef               char i8;
+typedef          short int i16;
+typedef                int i32;
+typedef          long long i64;
+typedef unsigned      char u8;
 typedef unsigned short int u16;
-typedef unsigned int       u32;
+typedef unsigned       int u32;
 typedef unsigned long long u64;
 
-void framebuffer_size_callback(GLFWwindow* window, i32 width, i32 height) {
-	glViewport(0, 0, width, height);
+void framebuffer_size_callback(GLFWwindow* window, i32 w, i32 h) {
+	glViewport(0, 0, w, h);
 }
 
-GLFWwindow* glutilInit(i32 major, i32 minor,
-	                     i32 width, i32 height,
-	                     const i8* title,
-	                     i32 screenWidth=1366,
-	                     i32 screenHeight=768) {
+GLFWwindow* glutilInit(i32 major, i32 minor, i32 w, i32 h, const i8* title,
+	                     i32 screenWidth=1366, i32 screenHeight=768) {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, major);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, minor);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	GLFWwindow* window = glfwCreateWindow(width, height, title, nullptr, nullptr);
-	glfwSetWindowPos(window, screenWidth/2 - width/2, screenHeight/2 - height/2);
+	GLFWwindow* window = glfwCreateWindow(w, h, title, nullptr, nullptr);
+	glfwSetWindowPos(window, screenWidth/2 - w/2, screenHeight/2 - h/2);
 	if (window == nullptr) {
 		std::cerr << "Failed to create GLFW Window\n";
 		glfwTerminate();
@@ -58,10 +55,10 @@ GLFWwindow* glutilInit(i32 major, i32 minor,
 }
 
 class Shader {
-	ui32 pid;
+	u32 pid;
 	Path* path;
 
-	i32 ok;             // check for error status
+	i32 ok;           // check for error status
 	i8 infoLog[512];  // get error status info
 
 public:
@@ -78,8 +75,8 @@ public:
 		std::string fragmentSrc;
 		std::getline(fragmentFile, fragmentSrc, '\0');
 
-		ui32 vertex = mkShader(vertexSrc.c_str(), GL_VERTEX_SHADER);
-		ui32 fragment = mkShader(fragmentSrc.c_str(), GL_FRAGMENT_SHADER);
+		u32 vertex = mkShader(vertexSrc.c_str(), GL_VERTEX_SHADER);
+		u32 fragment = mkShader(fragmentSrc.c_str(), GL_FRAGMENT_SHADER);
 
 		pid = glCreateProgram();
 		glAttachShader(pid, vertex);
@@ -102,11 +99,11 @@ public:
 	void useProgram() {
 		glUseProgram(pid);
 	}
-	ui32 getProgram() { // might need to refactor this later ughhh
+	u32 getProgram() { // might need to refactor this later ughhh
 		return pid;
 	}
 	// Set uniforms
-	void setI32(const i8* name, const int& i) const {
+	void setI32(const i8* name, const i32& i) const {
 		glUniform1i(glGetUniformLocation(pid, name), i);
 	}
 	void setVec3(const i8* name, f32 a, f32 b, f32 c) const {
@@ -117,9 +114,9 @@ public:
 	}
 
 	// Texture loading
-	ui32 loadTexture(const std::string& textureFile,
-		               i32 param=GL_LINEAR) {
-		ui32 texture;
+	u32 loadTexture(const std::string& textureFile,
+		              i32 param=GL_LINEAR) {
+		u32 texture;
 		std::string fileName = path->tp(textureFile);
 
 		glGenTextures(1, &texture);
@@ -132,7 +129,7 @@ public:
 		i32 width, height, nrChannels;
 
 		stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertio
-		ui8* data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
+		u8* data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
 		if (data != nullptr) {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0,
 			             GL_RGB, GL_UNSIGNED_BYTE, data);
@@ -146,8 +143,8 @@ public:
 	}
 
 private:
-	ui32 mkShader(const i8* source, GLenum type) {
-		ui32 shader = glCreateShader(type);
+	u32 mkShader(const i8* source, GLenum type) {
+		u32 shader = glCreateShader(type);
 		glShaderSource(shader, 1, &source, nullptr);
 		glCompileShader(shader);
 		glGetShaderiv(shader, GL_COMPILE_STATUS, &ok);

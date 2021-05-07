@@ -1,6 +1,6 @@
 #include <glutil.h>
 
-const unsigned int FSIZE = sizeof(float);
+const u32 FSIZE = sizeof(f32);
 
 /**
  * keyboard input processing
@@ -11,11 +11,11 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-int main() {
+i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, 960, 540, "Rectangulito");
 	Shader* shader = new Shader(); // default: shader.vert and shader.frag
 
-	unsigned int vao;
+	u32 vao;
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 

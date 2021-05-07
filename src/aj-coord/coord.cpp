@@ -1,8 +1,8 @@
 #include <glutil.h>
 
-const unsigned int FSIZE = sizeof(float);
-const unsigned int SCR_WIDTH = 960;
-const unsigned int SCR_HEIGHT = 540;
+const u32 FSIZE = sizeof(f32);
+const u32 SCR_WIDTH = 960;
+const u32 SCR_HEIGHT = 540;
 
 /**
  * keyboard input processing
@@ -13,21 +13,21 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-int main() {
+i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Rectangulito");
 	Shader* shader = new Shader();
 
-	float vertices[] = {
+	f32 vertices[] = {
 		 // posiciones         colores       texturas
 		 0.5,  0.5,  0.0,   1.0, 0.0, 0.0,   1.0, 1.0,
 		 0.5, -0.5,  0.0,   0.0, 1.0, 0.0,   1.0, 0.0,
 		-0.5, -0.5,  0.0,   1.0, 0.5, 0.0,   0.0, 0.0,
 		-0.5,  0.5,  0.0,   0.0, 0.0, 1.0,   0.0, 1.0 };
-	unsigned int idxs[] = {
+	u32 idxs[] = {
 		0, 1, 3,
 		1, 2, 3 };
 
-	unsigned int vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -50,14 +50,14 @@ int main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 
-	unsigned int texture;
+	u32 texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	int width, height, nrChannels;
+	i32 width, height, nrChannels;
 
 	stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertio
 	unsigned char* data = stbi_load(
@@ -89,11 +89,11 @@ int main() {
 		model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
 		view  = glm::translate(view, glm::vec3(0.0, 0.0, -6.0));
 		projection = glm::perspective(glm::radians(45.0f),
-				(float)SCR_WIDTH / (float)SCR_HEIGHT, 0.1f, 100.0f);
+				(f32)SCR_WIDTH / (f32)SCR_HEIGHT, 0.1f, 100.0f);
 
-		unsigned int modelLoc = glGetUniformLocation(shader->getProgram(), "model");
-		unsigned int viewLoc = glGetUniformLocation(shader->getProgram(), "view");
-		unsigned int projLoc = glGetUniformLocation(shader->getProgram(), "proj");
+		u32 modelLoc = glGetUniformLocation(shader->getProgram(), "model");
+		u32 viewLoc = glGetUniformLocation(shader->getProgram(), "view");
+		u32 projLoc = glGetUniformLocation(shader->getProgram(), "proj");
 
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, &view[0][0]);

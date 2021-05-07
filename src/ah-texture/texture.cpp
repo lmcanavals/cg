@@ -1,6 +1,6 @@
 #include <glutil.h>
 
-const unsigned int FSIZE = sizeof(float);
+const u32 FSIZE = sizeof(f32);
 
 /**
  * keyboard input processing
@@ -11,21 +11,21 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-int main() {
+i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, 960, 540, "Rectangulito");
 	Shader* shader = new Shader(); // default: shader.vert and shader.frag
 
-	float vertices[] = {
+	f32 vertices[] = {
 		 // posiciones         colores       texturas
 		 0.5,  0.5,  0.0,   1.0, 0.0, 0.0,   1.0, 1.0,
 		 0.5, -0.5,  0.0,   0.0, 1.0, 0.0,   1.0, 0.0,
 		-0.5, -0.5,  0.0,   1.0, 0.5, 0.0,   0.0, 0.0,
 		-0.5,  0.5,  0.0,   0.0, 0.0, 1.0,   0.0, 1.0 };
-	unsigned int idxs[] = {
+	u32 idxs[] = {
 		0, 1, 3,
 		1, 2, 3 };
 
-	unsigned int vbo, vao, ebo;
+	u32 vbo, vao, ebo;
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
@@ -48,14 +48,14 @@ int main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 
-	unsigned int texture;
+	u32 texture;
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	int width, height, nrChannels;
+	i32 width, height, nrChannels;
 
 	stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertio
 	unsigned char* data = stbi_load(
