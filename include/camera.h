@@ -48,8 +48,8 @@ public:
 		}
 	}
 	void processMouse(f32 xoffset, f32 yoffset, bool constrainPitch = true) {
-		yaw   = xoffset * mouseSensitivity;
-		pitch = yoffset * mouseSensitivity;
+		yaw   += xoffset * mouseSensitivity;
+		pitch += yoffset * mouseSensitivity;
 		if (constrainPitch) {
 			if (pitch > 89.0f) {
 				pitch = 89.0f;

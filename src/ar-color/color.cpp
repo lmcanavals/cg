@@ -123,10 +123,11 @@ i32 main() {
 
 	glBindVertexArray(cubeVao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
 	glBufferData(GL_ARRAY_BUFFER, cubex->getVSize()*FSIZE,
 	             cubex->getVertices(), GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, cubex->getISize()*ISIZE,
 	             cubex->getIndices(), GL_STATIC_DRAW);
 
