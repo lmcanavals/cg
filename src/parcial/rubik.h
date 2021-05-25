@@ -18,6 +18,8 @@ class Rubik {
 
 	v3d cube;
 
+	const f32 theta = (f32)M_PI/2.0f;
+
 	public:
 
 	Rubik() : cube(3, v2d(3, v1d(3, nullptr))) {
@@ -41,8 +43,7 @@ class Rubik {
 			for (u32 k = 0; k < cube.size(); ++k) {
 				auto block = cube[i][j][k];
 				block->model = glm::translate(block->model, -block->pos);
-				block->model = glm::rotate(block->model, (f32)M_PI/-2.0f,
-						{1.0f, 0.0f, 0.0f});
+				block->model = glm::rotate(block->model, theta, {1.0f, 0.0f, 0.0f});
 				block->model = glm::translate(block->model, block->pos);
 			}
 		}
@@ -65,23 +66,22 @@ class Rubik {
 			for (u32 k = 0; k < cube.size(); ++k) {
 				auto block = cube[i][j][k];
 				block->model = glm::translate(block->model, -block->pos);
-				block->model = glm::rotate(block->model, (f32)M_PI/-2.0f,
-						{0.0f, 1.0f, 0.0f});
+				block->model = glm::rotate(block->model, theta, {0.0f, 1.0f, 0.0f});
 				block->model = glm::translate(block->model, block->pos);
 			}
 		}
 		// ugh, this part is hard, now physically rotate everything
 		auto temp = cube[0][j][0];
-		cube[0][j][0] = cube[0][j][2];
-		cube[0][j][2] = cube[2][j][2];
-		cube[2][j][2] = cube[2][j][0];
-		cube[2][j][0] = temp;
+		cube[0][j][0] = cube[2][j][0];
+		cube[2][j][0] = cube[2][j][2];
+		cube[2][j][2] = cube[0][j][2];
+		cube[0][j][2] = temp;
 
 		temp = cube[0][j][1];
-		cube[0][j][1] = cube[1][j][2];
-		cube[1][j][2] = cube[2][j][1];
-		cube[2][j][1] = cube[1][j][0];
-		cube[1][j][0] = temp;
+		cube[0][j][1] = cube[1][j][0];
+		cube[1][j][0] = cube[2][j][1];
+		cube[2][j][1] = cube[1][j][2];
+		cube[1][j][2] = temp;
 	}
 
 	glm::mat4 getModel(u32 i, u32 j, u32 k) {

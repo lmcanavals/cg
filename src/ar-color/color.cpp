@@ -132,14 +132,14 @@ i32 main() {
 	             cubex->getIndices(), GL_STATIC_DRAW);
 
 	// posiciones
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11*FSIZE, (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glBindVertexArray(lightCubeVao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 11*FSIZE, (void*)0);
 	glEnableVertexAttribArray(0);
 
 	glEnable(GL_DEPTH_TEST);
@@ -171,7 +171,7 @@ i32 main() {
 		lightingShader->setMat4("model", model);
 
 		glBindVertexArray(cubeVao);
-		glDrawElements(GL_TRIANGLES, 6*6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
 
 		lightCubeShader->useProgram();
 		lightCubeShader->setMat4("proj", projection);
@@ -182,7 +182,7 @@ i32 main() {
 		lightCubeShader->setMat4("model", model);
 
 		glBindVertexArray(lightCubeVao);
-		glDrawElements(GL_TRIANGLES, 6*6, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();

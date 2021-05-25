@@ -4,18 +4,15 @@
 
 #include <math.h>
 
-#include "rubik.h"
-
 const u32 FSIZE      = sizeof(f32);
 const u32 ISIZE      = sizeof(i32);
 const u32 SCR_WIDTH  = 1280;
 const u32 SCR_HEIGHT = 720;
 const f32 ASPECT     = (f32)SCR_WIDTH / (f32)SCR_HEIGHT;
 
-glm::vec3 lightPos(1.5f, 1.5f, 2.5f);
+glm::vec3 lightPos(0.25f, 0.75f, 0.25f);
 
-Cam cam(1.0f, 2.5f, 5.0f);
-Rubik* rubik = new Rubik();
+Cam* cam;
 
 f32  lastx;
 f32  lasty;
@@ -31,37 +28,16 @@ void processInput(GLFWwindow* window) {
 		glfwSetWindowShouldClose(window, true);
 	}
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-		cam.processKeyboard(FORWARD, deltaTime);
+		cam->processKeyboard(FORWARD, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-		cam.processKeyboard(LEFT, deltaTime);
+		cam->processKeyboard(LEFT, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-		cam.processKeyboard(BACKWARD, deltaTime);
+		cam->processKeyboard(BACKWARD, deltaTime);
 	}
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-		cam.processKeyboard(RIGHT, deltaTime);
-	}
-}
-
-void key_callback(GLFWwindow* window, int key, int code, int action, int mods) {
-	if (key == GLFW_KEY_Y && action == GLFW_PRESS) {
-		rubik->rotateX(0);
-	}
-	if (key == GLFW_KEY_U && action == GLFW_PRESS) {
-		rubik->rotateX(1);
-	}
-	if (key == GLFW_KEY_I && action == GLFW_PRESS) {
-		rubik->rotateX(2);
-	}
-	if (key == GLFW_KEY_H && action == GLFW_PRESS) {
-		rubik->rotateY(0);
-	}
-	if (key == GLFW_KEY_J && action == GLFW_PRESS) {
-		rubik->rotateY(1);
-	}
-	if (key == GLFW_KEY_K && action == GLFW_PRESS) {
-		rubik->rotateY(2);
+		cam->processKeyboard(RIGHT, deltaTime);
 	}
 }
 
@@ -73,7 +49,7 @@ void mouse_callback(GLFWwindow* window, f64 xpos, f64 ypos) {
 			firstMouse = false;
 			return;
 		}
-		cam.processMouse((f32)(xpos - lastx), (f32)(lasty - ypos));
+		cam->processMouse((f32)(xpos - lastx), (f32)(lasty - ypos));
 		lastx = xpos;
 		lasty = ypos;
 	} else {
@@ -82,19 +58,19 @@ void mouse_callback(GLFWwindow* window, f64 xpos, f64 ypos) {
 }
 
 void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
-	cam.processScroll((f32)yoffset);
+	cam->processScroll((f32)yoffset);
 }
 
 i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Bleep!");
-	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	Shader* lightingShader = new Shader();
 	Shader* lightCubeShader = new Shader("bin", "resources/textures",
-			"shader.vert", "shader2.frag");
+			"shader2.vert", "shader2.frag");
 
-	Cube* cubex = new Cube(0.99f, 0.99f, 0.99f);
+	cam = new Cam();
+	Cube* cubex = new Cube();
 
 	u32 cubeVao, lightCubeVao, vbo, ebo;
 	glGenVertexArrays(1, &cubeVao);
@@ -114,8 +90,12 @@ i32 main() {
 	// posiciones
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, cubex->len(), cubex->skip(0));
 	glEnableVertexAttribArray(0);
+	// colores
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, cubex->len(), cubex->skip(3));
 	glEnableVertexAttribArray(1);
+	// normales: ojo que es el 3er comp, por eso offset es 6
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, cubex->len(), cubex->skip(6));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(lightCubeVao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -132,30 +112,31 @@ i32 main() {
 		lastFrame = currentFrame;
 
 		processInput(window);
-		glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glm::mat4 proj = glm::perspective(cam.getZoom(), ASPECT, 0.1f, 100.0f);
+		glm::mat4 proj = glm::perspective(cam->getZoom(), ASPECT, 0.1f, 100.0f);
 
 		glBindVertexArray(cubeVao);
 		lightingShader->useProgram();
-		lightingShader->setMat4("proj", proj);
-		lightingShader->setMat4("view", cam.getViewM4());
+		lightingShader->setVec3("xyz", lightPos);
+		lightingShader->setVec3("objectColor", 1.0f, 1.0f, 1.0f);
 
-		u32 i, j, k;
-		for (i = 0; i < 3; ++i) for (j = 0; j < 3; ++j) for (k = 0; k < 3; ++k) {
-			lightingShader->setMat4("model", rubik->getModel(i, j, k));
-			glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
-		}
+		lightingShader->setMat4("proj", proj);
+		lightingShader->setMat4("view", cam->getViewM4());
+
+		glm::mat4 model = glm::mat4(1.0f);
+		lightCubeShader->setMat4("model", model);
+		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
 
 		glBindVertexArray(lightCubeVao);
 		lightCubeShader->useProgram();
 		lightCubeShader->setMat4("proj", proj);
-		lightCubeShader->setMat4("view", cam.getViewM4());
+		lightCubeShader->setMat4("view", cam->getViewM4());
 
-		glm::mat4 model = glm::mat4(1.0f);
+		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
-		model = glm::scale(model, glm::vec3(0.2f));
+		model = glm::scale(model, glm::vec3(0.05f));
 		lightCubeShader->setMat4("model", model);
 		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
 
@@ -170,6 +151,7 @@ i32 main() {
 	delete lightingShader;
 	delete lightCubeShader;
 	delete cubex;
+	delete cam;
 
 	return 0;
 }

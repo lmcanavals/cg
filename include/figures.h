@@ -12,10 +12,11 @@ protected:
 	u32* indices;
 	u32  nv;
 	u32  ni;
+	u32  n;
 
 public:
 	Object(u32 n, u32 m)
-			: vertices(new f32[n]), indices(new u32[m]), nv(n), ni(m) {}
+			: vertices(new f32[24*n]), indices(new u32[m]), nv(24*n), ni(m), n(n) {}
 
 	f32* getVertices() {
 		return vertices;
@@ -29,6 +30,12 @@ public:
 	u32 getISize() {
 		return ni;
 	}
+	u32 len() {
+		return sizeof(f32)*n;
+	}
+	void* skip(u32 i) {
+		return (void*)(i * sizeof(u32));
+	}
 };
 
 class Cube : public Object {
@@ -38,10 +45,10 @@ class Cube : public Object {
 
 public:
 	Cube(f32 width=1.0f, f32 height=1.0f, f32 depth=1.0f,
-	     Rgb a={1.0f, 1.0f, 1.0f}, Rgb b={1.0f, 0.0f, 0.0f},
-	     Rgb c={1.0f, 1.0f, 0.0f}, Rgb d={0.0f, 1.0f, 1.0f},
-	     Rgb e={1.0f, 0.0f, 1.0f}, Rgb f={0.0f, 1.0f, 0.0f})
-			: Object(24*11, 6*6), width(width), height(height), depth(depth) {
+	     Rgb a={0.8f, 0.9f, 1.0f}, Rgb b={0.9f, 0.1f, 0.2f},
+	     Rgb c={0.8f, 0.8f, 0.2f}, Rgb d={0.3f, 0.9f, 0.8f},
+	     Rgb e={1.0f, 0.5f, 0.2f}, Rgb f={0.2f, 0.9f, 0.3f})
+			: Object(11, 36), width(width), height(height), depth(depth) {
 		f32 wm =  width / 2.0f;
 		f32 hm = height / 2.0f;
 		f32 dm =  depth / 2.0f;

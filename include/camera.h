@@ -18,10 +18,10 @@ class Cam {
 	f32       speed;
 
 public:
-	Cam(f32 px  =   0.0f, f32 py    = 0.0f, f32 pz   =  0.0f,
-			f32 fx  =   0.0f, f32 fy    = 0.0f, f32 fz   = -1.0f,
-			f32 ux  =   0.0f, f32 uy    = 1.0f, f32 uz   =  0.0f,
-			f32 yaw = -90.0f, f32 pitch = 0.0f, f32 zoom = 45.0f)
+	Cam(f32 px  =    1.0f, f32 py    =  1.0f, f32 pz   =  2.0f,
+			f32 fx  =    0.0f, f32 fy    =  0.0f, f32 fz   =  0.0f,
+			f32 ux  =    0.0f, f32 uy    =  1.0f, f32 uz   =  0.0f,
+			f32 yaw = -115.0f, f32 pitch = -15.0f, f32 zoom = 45.0f)
 			:	pos({px, py, pz}), lookat({fx, fy, fz}), up({ux, uy, uz}),
 				worldUp({ux, uy, uz}), yaw(yaw), pitch(pitch), zoom(zoom),
 				mouseSensitivity(0.1f), speed(2.5f) {
