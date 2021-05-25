@@ -16,7 +16,7 @@ glm::vec3 lightPos(1.5f, 1.5f, 2.5f);
 
 Cam cam(1.0f, 2.5f, 5.0f);
 Rubik* rubik = new Rubik();
-s
+
 f32  lastx;
 f32  lasty;
 bool firstMouse = true;
