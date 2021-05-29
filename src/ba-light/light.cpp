@@ -11,6 +11,7 @@ const u32 SCR_HEIGHT = 720;
 const f32 ASPECT     = (f32)SCR_WIDTH / (f32)SCR_HEIGHT;
 
 glm::vec3 lightPos(0.25f, 0.75f, 0.25f);
+glm::vec3 lightColor(1.0f, 1.0f, 1.0f);
 
 Cam* cam;
 
@@ -120,7 +121,7 @@ i32 main() {
 		glBindVertexArray(cubeVao);
 		lightingShader->useProgram();
 		lightingShader->setVec3("xyz", lightPos);
-		lightingShader->setVec3("objectColor", 1.0f, 1.0f, 1.0f);
+		lightingShader->setVec3("objectColor", lightColor);
 
 		lightingShader->setMat4("proj", proj);
 		lightingShader->setMat4("view", cam->getViewM4());
