@@ -34,6 +34,9 @@ public:
 	f32 getZoom() {
 		return glm::radians(zoom);
 	}
+	glm::vec3& getPos() {
+		return pos;
+	}
 
 	void processKeyboard(CameraMovement direction, f32 deltaTime) {
 		f32 velocity = speed * deltaTime;
