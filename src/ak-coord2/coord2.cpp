@@ -72,7 +72,7 @@ i32 main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 
-	u32 texture1 = shader->loadTexture("mafalda.jpg");
+	//u32 texture1 = shader->loadTexture("mafalda.jpg");
 	u32 texture2 = shader->loadTexture("container.jpg");
 
 	glBindVertexArray(0);

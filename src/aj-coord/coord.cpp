@@ -1,5 +1,4 @@
-#include <glutil.h>
-
+#include <glutil.h> 
 const u32 FSIZE = sizeof(f32);
 const u32 SCR_WIDTH = 960;
 const u32 SCR_HEIGHT = 540;
