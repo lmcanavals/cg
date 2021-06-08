@@ -62,10 +62,10 @@ class Shader {
 	i8 infoLog[512];  // get error status info
 
 public:
-	Shader(std::string shadersPath = "bin",
-		     std::string texturesPath = "resources/textures",
-		     std::string vertexFileName = "shader.vert",
-		     std::string fragmentFileName = "shader.frag")
+	Shader(std::string vertexFileName = "shader.vert",
+	       std::string fragmentFileName = "shader.frag",
+	       std::string shadersPath = "bin",
+	       std::string texturesPath = "resources/textures")
 			: path(new Path(shadersPath, texturesPath)) {
 		std::ifstream vertexFile(path->sp(vertexFileName));
 		std::string vertexSrc;

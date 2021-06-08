@@ -67,8 +67,7 @@ i32 main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	Shader* lightingShader = new Shader();
-	Shader* lightCubeShader = new Shader("bin", "resources/textures",
-			"shader2.vert", "shader2.frag");
+	Shader* lightCubeShader = new Shader("shader2.vert", "shader2.frag");
 
 	cam = new Cam();
 	Cube* cubex = new Cube();
