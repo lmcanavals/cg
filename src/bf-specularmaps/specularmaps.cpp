@@ -14,12 +14,12 @@ glm::vec3 lightPos(0.0f);
 
 Cam* cam;
 
-f32 lastx;
-f32 lasty;
-f32 deltaTime = 0.0f;
-f32 lastFrame = 0.0f;
+f32  lastx;
+f32  lasty;
+f32  deltaTime  = 0.0f;
+f32  lastFrame  = 0.0f;
 bool firstmouse = true;
-bool wireframe = false;
+bool wireframe  = false;
 
 /**
  * keyboard input processing
@@ -40,11 +40,11 @@ void processInput(GLFWwindow* window) {
 	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
 		cam->processKeyboard(RIGHT, deltaTime);
 	}
-	if (glfwGetKey(window, GLFW_KEY_X) == GLFW_PRESS) {
-		wireframe = true;
-	}
-	if (glfwGetKey(window, GLFW_KEY_Z) == GLFW_PRESS) {
-		wireframe = false;
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
+		wireframe = !wireframe;
 	}
 }
 
@@ -70,9 +70,10 @@ void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
 
 i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCRWIDTH, SCRHEIGHT, "Hola");
+	glfwSetKeyCallback(window, key_callback);
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
-	Shader* lightingShader = new Shader("specularmaps.vert", "specularmaps.frag");
+	Shader* shader = new Shader("specularmaps.vert", "specularmaps.frag");
 	Shader* lightCubeShader = new Shader("lightcube.vert", "lightcube.frag");
 	cam = new Cam();
 
@@ -112,12 +113,11 @@ i32 main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	u32 diffuseMap = lightingShader->loadTexture("container2.png");
-	u32 specularMap = lightingShader->loadTexture("container2_specular.png");
-	
-	lightingShader->useProgram();
-	lightingShader->setI32("xyzMat.diffuse", 0);
-	lightingShader->setI32("xyzMat.specular", 1);
+	shader->loadTexture("container2.png", "xyzMat.diffuse");           // tex0
+	shader->loadTexture("container2_specular.png", "xyzMat.specular"); // tex1
+
+	shader->activeTexture(0);
+	shader->activeTexture(1);
 
 	while (!glfwWindowShouldClose(window)) {
 		f32 currentFrame = glfwGetTime();
@@ -128,43 +128,38 @@ i32 main() {
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+		glPolygonMode(GL_FRONT_AND_BACK, wireframe? GL_LINE: GL_FILL);
 
-		lightingShader->useProgram();
 		glm::mat4 proj = glm::perspective(cam->getZoom(), ASPECT, 0.1f, 100.0f);
 
 		lightPos.x = 1.5f * (cos(currentFrame) + sin(currentFrame));
 		lightPos.z = 1.5f * (cos(currentFrame) - sin(currentFrame));
-		lightingShader->setVec3("xyzLht.position", lightPos);
-		lightingShader->setVec3("xyz", cam->getPos());
 
-		lightingShader->setVec3("xyzLht.ambient", 0.2f, 0.2f, 0.2f);
-		lightingShader->setVec3("xyzLht.diffuse", 0.5f, 0.5f, 0.5f);
-		lightingShader->setVec3("xyzLht.specular", 1.0f, 1.0f, 1.0f);
+		shader->useProgram();
 
-		lightingShader->setF32("xyzMat.shininess", 64.0f);
-
-		lightingShader->setMat4("proj", proj);
-		lightingShader->setMat4("view", cam->getViewM4());
+		shader->setVec3("xyz", cam->getPos());
+		shader->setVec3("xyzLht.position", lightPos);
+		shader->setVec3("xyzLht.ambient", 0.2f, 0.2f, 0.2f);
+		shader->setVec3("xyzLht.diffuse", 0.5f, 0.5f, 0.5f);
+		shader->setVec3("xyzLht.specular", 1.0f, 1.0f, 1.0f);
+		shader->setF32("xyzMat.shininess", 64.0f);
 
 		glm::mat4 model = glm::mat4(1.0f);
-		lightingShader->setMat4("model", model);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseMap);
-
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, specularMap);
+		shader->setMat4("proj", proj);
+		shader->setMat4("view", cam->getViewM4());
+		shader->setMat4("model", model);
 
 		glBindVertexArray(cubeVao);
 		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
 
-
+		// Luz claritaaaaaa ah ahh...
 		lightCubeShader->useProgram();
-		lightCubeShader->setMat4("proj", proj);
-		lightCubeShader->setMat4("view", cam->getViewM4());
+
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.05));
+		lightCubeShader->setMat4("proj", proj);
+		lightCubeShader->setMat4("view", cam->getViewM4());
 		lightCubeShader->setMat4("model", model);
 
 		glBindVertexArray(lightCubeVao);
@@ -179,7 +174,7 @@ i32 main() {
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 
-	delete lightingShader;
+	delete shader;
 	delete lightCubeShader;
 	delete cubex;
 	delete cam;

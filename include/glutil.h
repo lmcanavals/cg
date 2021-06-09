@@ -13,6 +13,7 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <vector>
 
 typedef              float f32;
 typedef             double f64;
@@ -55,11 +56,14 @@ GLFWwindow* glutilInit(i32 major, i32 minor, i32 w, i32 h, const i8* title,
 }
 
 class Shader {
-	u32 pid;
+	u32   pid;
 	Path* path;
 
-	i32 ok;           // check for error status
-	i8 infoLog[512];  // get error status info
+	std::vector<u32> textures;
+
+	// check for error status
+	i32 ok;
+	i8  infoLog[512];
 
 public:
 	Shader(std::string vertexFileName = "shader.vert",
@@ -102,6 +106,7 @@ public:
 	u32 getProgram() { // might need to refactor this later ughhh
 		return pid;
 	}
+
 	// Set uniforms
 	void setI32(const i8* name, const i32& i) const {
 		glUniform1i(glGetUniformLocation(pid, name), i);
@@ -121,45 +126,50 @@ public:
 
 	// Texture loading
 	u32 loadTexture(const std::string& textureFile,
-		              i32 param=GL_LINEAR) {
+	                const std::string& uniformName,
+	                i32 param=GL_LINEAR) {
 		u32 texture;
 		std::string fileName = path->tp(textureFile);
 
 		glGenTextures(1, &texture);
 		
-		i32 width, height, nrChannels;
+		i32 w, h, nrChannels;
 
 		stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertio
-		u8* data = stbi_load(fileName.c_str(), &width, &height, &nrChannels, 0);
+		u8* data = stbi_load(fileName.c_str(), &w, &h, &nrChannels, 0);
 		if (data != nullptr) {
-			GLenum format;
+			GLenum fmt;
 
-			if (nrChannels == 1) {
-				format = GL_RED;
+			if (nrChannels == 4) {
+				fmt = GL_RGBA;
 			} else if (nrChannels == 3) {
-				format = GL_RGB;
+				fmt = GL_RGB;
 			} else {
-				format = GL_RGBA;
+				fmt = GL_RED;
 			}
 
 			glBindTexture(GL_TEXTURE_2D, texture);
-
-			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format,
-			             GL_UNSIGNED_BYTE, data);
+			glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
 			glGenerateMipmap(GL_TEXTURE_2D);
-
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
 			                GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
-
 		} else {
 			std::cerr << "Can't load texture\n";
+			return -1;
 		}
 		stbi_image_free(data);
+		useProgram();
+		setI32(uniformName.c_str(), textures.size());
+		textures.push_back(texture);
 
 		return texture;
+	}
+	void activeTexture(u32 pos) {
+		glActiveTexture(gl_texture(pos));
+		glBindTexture(GL_TEXTURE_2D, textures[pos]);
 	}
 
 private:
@@ -175,6 +185,21 @@ private:
 			return 0;
 		}
 		return shader;
+	}
+	i32 gl_texture(u32 pos) {
+		switch (pos) {
+			case 0: return GL_TEXTURE0;
+			case 1: return GL_TEXTURE1;
+			case 2: return GL_TEXTURE2;
+			case 3: return GL_TEXTURE3;
+			case 4: return GL_TEXTURE4;
+			case 5: return GL_TEXTURE5;
+			case 6: return GL_TEXTURE6;
+			case 7: return GL_TEXTURE7;
+			case 8: return GL_TEXTURE8;
+			case 9: return GL_TEXTURE9;
+		}
+		return -1;
 	}
 };
 
