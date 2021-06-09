@@ -126,8 +126,8 @@ public:
 
 	// Texture loading
 	u32 loadTexture(const std::string& textureFile,
-	                const std::string& uniformName,
-	                i32 param=GL_LINEAR) {
+	                const std::string& uniformName = "",
+	                i32 param = GL_LINEAR) {
 		u32 texture;
 		std::string fileName = path->tp(textureFile);
 
@@ -162,7 +162,9 @@ public:
 		}
 		stbi_image_free(data);
 		useProgram();
-		setI32(uniformName.c_str(), textures.size());
+		if (uniformName != "") {
+			setI32(uniformName.c_str(), textures.size());
+		}
 		textures.push_back(texture);
 
 		return texture;

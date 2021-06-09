@@ -19,7 +19,7 @@ void processInput(GLFWwindow* window) {
 
 i32 main() {
 	GLFWwindow* window = glutilInit(3, 3, SCR_WIDTH, SCR_HEIGHT, "Cubito");
-	Shader* shader = new Shader("bin", "resources/textures");
+	Shader* shader = new Shader();
 
 	glEnable(GL_DEPTH_TEST);
 	f32 vertices[] = {
@@ -72,20 +72,17 @@ i32 main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 
-	//u32 texture1 = shader->loadTexture("mafalda.jpg");
-	u32 texture2 = shader->loadTexture("container.jpg");
+	shader->loadTexture("mafalda.jpg");
 
 	glBindVertexArray(0);
-
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 	while (!glfwWindowShouldClose(window)) {
 		processInput(window);
 		glClearColor(0.1, 0.2, 0.3, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glBindTexture(GL_TEXTURE_2D, texture2);
+		shader->activeTexture(0);
 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
 
 		mat4 model      = mat4(1.0);
