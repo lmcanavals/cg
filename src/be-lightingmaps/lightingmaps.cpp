@@ -112,10 +112,8 @@ i32 main() {
 
 	glEnable(GL_DEPTH_TEST);
 
-	u32 diffuseMap = lightingShader->loadTexture("container2.png");
-	
-	lightingShader->useProgram();
-	lightingShader->setI32("xyzMat.diffuse", 0);
+	lightingShader->loadTexture("container2.png", "xyzMat.diffuse");
+	lightingShader->activeTexture(0);
 
 	while (!glfwWindowShouldClose(window)) {
 		f32 currentFrame = glfwGetTime();
@@ -147,9 +145,6 @@ i32 main() {
 
 		glm::mat4 model = glm::mat4(1.0f);
 		lightingShader->setMat4("model", model);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, diffuseMap);
 
 		glBindVertexArray(cubeVao);
 		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
