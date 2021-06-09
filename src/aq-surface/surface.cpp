@@ -199,7 +199,7 @@ i32 main() {
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8*FSIZE, (void*)(6*FSIZE));
 	glEnableVertexAttribArray(2);
 	
-	u32 texture1 = shader->loadTexture("container.jpg");
+	shader->loadTexture("container.jpg");
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -208,13 +208,10 @@ i32 main() {
 		deltaTime = currentFrame - lastFrame;
 		lastFrame = currentFrame;
 
-		glBindTexture(GL_TEXTURE_2D, texture1);
-
 		processInput(window);
 		glClearColor(0.1f, 0.2f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		shader->useProgram();
 
 		glm::mat4 projection = glm::perspective(glm::radians(fov), ASPECT, 0.1f, 100.0f);
@@ -228,8 +225,6 @@ i32 main() {
 		for (u32 i = 0; i < positions.size(); ++i) {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, positions[i]);
-			//f32 theta = (f32)glfwGetTime();
-			//model = glm::rotate(model, theta, glm::vec3(0.3f, 0.6f, 0.9f));
 			shader->setMat4("model", model);
 
 			glDrawElements(GL_TRIANGLES, 6*6, GL_UNSIGNED_INT, 0);

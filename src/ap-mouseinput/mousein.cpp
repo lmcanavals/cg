@@ -204,7 +204,7 @@ i32 main() {
 		for (u32 i = 0; i < positions.size(); ++i) {
 			glm::mat4 model = glm::mat4(1.0f);
 			model = glm::translate(model, positions[i]);
-			f32 theta = (f32)glfwGetTime();
+			//f32 theta = (f32)glfwGetTime();
 			//model = glm::rotate(model, theta, glm::vec3(0.3f, 0.6f, 0.9f));
 			shader->setMat4("model", model);
 
