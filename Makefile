@@ -9,11 +9,11 @@ LDFLAGS += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl
 
 CPPFLAGS += -Iinclude
 
-all: dirs bin/program
+all: dirs bin/prog.out
 
 src/%.: src/%/*.cpp dirs build/glad.o
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o build/main.o $<
-	$(CXX) -o bin/program build/*.o $(LDFLAGS)
+	$(CXX) -o bin/prog.out build/*.o $(LDFLAGS)
 	$(CP) $(shell dirname $<)/*.vert bin/ 2>/dev/null || echo ''
 	$(CP) $(shell dirname $<)/*.frag bin/ 2>/dev/null || echo ''
 

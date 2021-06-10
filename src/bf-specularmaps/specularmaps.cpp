@@ -74,7 +74,7 @@ i32 main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 	Shader* shader = new Shader("specularmaps.vert", "specularmaps.frag");
-	Shader* lightCubeShader = new Shader("lightcube.vert", "lightcube.frag");
+	Shader* lampShader = new Shader("lamp.vert", "lamp.frag");
 	cam = new Cam();
 
 	Cube* cubex = new Cube();
@@ -153,14 +153,14 @@ i32 main() {
 		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
 
 		// Luz claritaaaaaa ah ahh...
-		lightCubeShader->useProgram();
+		lampShader->useProgram();
 
 		model = glm::mat4(1.0f);
 		model = glm::translate(model, lightPos);
 		model = glm::scale(model, glm::vec3(0.05));
-		lightCubeShader->setMat4("proj", proj);
-		lightCubeShader->setMat4("view", cam->getViewM4());
-		lightCubeShader->setMat4("model", model);
+		lampShader->setMat4("proj", proj);
+		lampShader->setMat4("view", cam->getViewM4());
+		lampShader->setMat4("model", model);
 
 		glBindVertexArray(lightCubeVao);
 		glDrawElements(GL_TRIANGLES, cubex->getISize(), GL_UNSIGNED_INT, 0);
@@ -175,7 +175,7 @@ i32 main() {
 	glDeleteBuffers(1, &ebo);
 
 	delete shader;
-	delete lightCubeShader;
+	delete lampShader;
 	delete cubex;
 	delete cam;
 
