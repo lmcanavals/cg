@@ -37,6 +37,9 @@ public:
 	glm::vec3& getPos() {
 		return pos;
 	}
+	glm::vec3& getFront() {
+		return lookat;
+	}
 
 	void processKeyboard(CameraMovement direction, f32 deltaTime) {
 		f32 velocity = speed * deltaTime;
