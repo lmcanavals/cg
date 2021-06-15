@@ -56,6 +56,7 @@ GLFWwindow* glutilInit(i32 major, i32 minor, i32 w, i32 h, const i8* title,
 }
 
 class Shader {
+public:
 	u32   pid;
 	Path* path;
 
