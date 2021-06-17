@@ -1,3 +1,4 @@
+#include <files.hpp>
 #include <model.hpp>
 #include <cam.hpp>
 
@@ -49,8 +50,12 @@ i32 main() {
 	glfwSetScrollCallback(window, scroll_callback);
 
 	cam = new Cam();
-	Shader* shader = new Shader("bin/shader.vert", "bin/shader.frag");
-	Model*  monito = new Model("resources/objects/monito/monito.obj");
+
+	Files*    files      = new Files();
+	Shader*   shader     = new Shader(files, "shader.vert", "shader.frag");
+	Model*    monito     = new Model(files, "monito/monito.obj");
+	glm::vec3 lightPos   = glm::vec3(1.0f);
+	glm::vec3 lightColor = glm::vec3(1.0f);
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -66,6 +71,11 @@ i32 main() {
 		glPolygonMode(GL_FRONT_AND_BACK, wireframe? GL_LINE: GL_FILL);
 
 		shader->use();
+		lightPos.x = 2.0f*(cos(currentFrame) - sin(currentFrame));
+		lightPos.z = 2.0f*(cos(currentFrame) + sin(currentFrame));
+		shader->setVec3("xyz", lightPos);
+		shader->setVec3("xyzColor", lightColor);
+		shader->setVec3("xyzView", cam->pos);
 		glm::mat4 proj = glm::perspective(cam->zoom, ASPECT, 0.1f, 100.0f);
 		shader->setMat4("proj", proj);
 		shader->setMat4("view", cam->getViewM4());

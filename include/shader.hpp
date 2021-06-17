@@ -2,17 +2,20 @@
 #define __SHADER_H__
 
 #include <glutil.hpp>
+#include <files.hpp>
 
 class Shader {
 public:
-	u32 pid;
+	Files* files;
+	u32   pid;
 
-	Shader(std::string vertexFileName, std::string fragmentFileName) {
-		std::ifstream vertexFile(vertexFileName);
+	Shader(Files* files, std::string vertexFileName, std::string fragmentFileName)
+			: files(files) {
+		std::ifstream vertexFile(files->shaderFile(vertexFileName));
 		std::string vertexSrc;
 		std::getline(vertexFile, vertexSrc, '\0');
 
-		std::ifstream fragmentFile(fragmentFileName);
+		std::ifstream fragmentFile(files->shaderFile(fragmentFileName));
 		std::string fragmentSrc;
 		std::getline(fragmentFile, fragmentSrc, '\0');
 

@@ -58,7 +58,7 @@ void mouse_callback(GLFWwindow* window, f64 xpos, f64 ypos) {
 	}
 }
 
-void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
+void scroll_callback(GLFWwindow*, f64, f64 yoffset) {
 	cam->processScroll((f32)yoffset);
 }
 
