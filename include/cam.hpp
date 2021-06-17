@@ -56,9 +56,9 @@ public:
 		} else if (direction == BACKWARD) {
 			pos -= lookat * velocity;
 		} else if (direction == LEFT) {
-			pos += right * velocity;
-		} else if (direction == RIGHT) {
 			pos -= right * velocity;
+		} else if (direction == RIGHT) {
+			pos += right * velocity;
 		}
 	}
 	void processScroll(f32 yoffset) {
