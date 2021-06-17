@@ -51,9 +51,11 @@ i32 main() {
 
 	cam = new Cam();
 
-	Files*    files      = new Files();
-	Shader*   shader     = new Shader(files, "shader.vert", "shader.frag");
-	Model*    monito     = new Model(files, "monito/monito.obj");
+	Files* files = new Files("bin", "resources/textures", "resources/objects");
+
+	Shader* shader = new Shader(files, "shader.vert", "shader.frag");
+	Model*  monito = new Model(files, "monito/monito.obj");
+
 	glm::vec3 lightPos   = glm::vec3(1.0f);
 	glm::vec3 lightColor = glm::vec3(1.0f);
 
