@@ -1,15 +1,13 @@
-CC  := gcc
-CXX := g++
+CC  := clang
+CXX := clang++
 CP  := cp
 RM  := rm -rf
 MD  := mkdir -p
 
-CXXFLAGS += -std=c++17 -pedantic -Wall -O3
-LDFLAGS += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lassimp
+CXXFLAGS += -std=c++20 -pedantic -Wall -O3
+LDFLAGS  += -lglfw -lGL -lX11 -lpthread -lXrandr -lXi -ldl -lassimp
 
 CPPFLAGS += -Iinclude
-
-all: dirs bin/prog.out
 
 src/%.: src/%/*.cpp dirs build/glad.o
 	$(CXX) -c $(CXXFLAGS) $(CPPFLAGS) -o build/main.o $<
@@ -21,9 +19,12 @@ build/glad.o:
 	$(CC) -c $(CPPFLAGS) -o build/glad.o src/glad.c
 	$(CC) -c $(CPPFLAGS) -o build/stb_image.o src/stb_image.c
 
-dirs:
-	@echo Creating folders
+dirs: build bin
+
+build:
 	@$(MD) build
+
+bin:
 	@$(MD) bin
 
 clean:

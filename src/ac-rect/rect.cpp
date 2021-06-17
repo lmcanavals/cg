@@ -24,7 +24,7 @@ char infoLog[512];  // get error messages
 /**
  * callback to resize viewport on window resize
  **/
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow*, int width, int height) {
 	glViewport(0, 0, width, height);
 }
 

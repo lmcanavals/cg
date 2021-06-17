@@ -39,16 +39,13 @@ public:
 };
 
 class Cube : public Object {
-	f32  width;
-	f32  height;
-	f32  depth;
 
 public:
 	Cube(f32 width=1.0f, f32 height=1.0f, f32 depth=1.0f,
 	     Rgb a={0.8f, 0.9f, 1.0f}, Rgb b={0.9f, 0.1f, 0.2f},
 	     Rgb c={0.8f, 0.8f, 0.2f}, Rgb d={0.3f, 0.9f, 0.8f},
 	     Rgb e={1.0f, 0.5f, 0.2f}, Rgb f={0.2f, 0.9f, 0.3f})
-			: Object(11, 36), width(width), height(height), depth(depth) {
+			: Object(11, 36) {
 		f32 wm =  width / 2.0f;
 		f32 hm = height / 2.0f;
 		f32 dm =  depth / 2.0f;

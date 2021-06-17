@@ -138,29 +138,28 @@ public:
 
 		stbi_set_flip_vertically_on_load(true); // porque en opgl el eje Y invertio
 		u8* data = stbi_load(fileName.c_str(), &w, &h, &nrChannels, 0);
-		if (data != nullptr) {
-			GLenum fmt;
-
-			if (nrChannels == 4) {
-				fmt = GL_RGBA;
-			} else if (nrChannels == 3) {
-				fmt = GL_RGB;
-			} else {
-				fmt = GL_RED;
-			}
-
-			glBindTexture(GL_TEXTURE_2D, texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
-			                GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
-		} else {
+		if (data == nullptr) {
 			std::cerr << "Can't load texture\n";
 			return -1;
 		}
+		GLenum fmt;
+
+		if (nrChannels == 4) {
+			fmt = GL_RGBA;
+		} else if (nrChannels == 3) {
+			fmt = GL_RGB;
+		} else {
+			fmt = GL_RED;
+		}
+
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glTexImage2D(GL_TEXTURE_2D, 0, fmt, w, h, 0, fmt, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,
+										GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param);
 		stbi_image_free(data);
 		useProgram();
 		if (uniformName != "") {

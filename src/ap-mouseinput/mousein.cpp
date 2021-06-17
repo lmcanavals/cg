@@ -124,7 +124,7 @@ void mouse_callback(GLFWwindow*, f64 xpos, f64 ypos) {
 	front = glm::normalize(f);
 }
 
-void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
+void scroll_callback(GLFWwindow*, f64, f64 yoffset) {
 	fov -= (f32)yoffset; // zoom
 	if (fov < 1.0f) {
 		fov = 1.0f;
