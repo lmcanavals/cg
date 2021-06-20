@@ -32,6 +32,7 @@
 *.app
 
 # Folders
+.ccls-cache/
 bin/
 build/
 src/test/

@@ -14,7 +14,7 @@ uniform sampler2D texture_diffuse1;
 
 void main() {
 	// ambient
-	float strength = 0.1;
+	float strength = 0.5;
 	vec3 ambient   = strength * xyzColor;
 
 	// diffuse
