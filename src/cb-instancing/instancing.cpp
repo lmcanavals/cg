@@ -59,11 +59,11 @@ i32 main() {
 	Model*  planet = new Model(files, "planet/planet.obj");
 	Model*  rock = new Model(files, "rock/rock.obj");
 
-	u32 amount = 10;
+	u32 amount = 100000;
 	glm::mat4* models = new glm::mat4[amount];
 	srand(glfwGetTime());
-	f32 radius = 15.0f;
-	f32 offset = 2.5f;
+	f32 radius = 25.0f;
+	f32 offset = 7.5f;
 	for (u32 i = 0; i < amount; ++i) {
 		glm::mat4 model = glm::mat4(1.0f);
 		f32 angle = (f32)i / (f32)amount * 360.0f;
@@ -85,6 +85,7 @@ i32 main() {
 	}
 	u32 buffer;
 	const u32 smat4 = sizeof(glm::mat4);
+	const u32 svec4 = sizeof(glm::vec4);
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
 	glBufferData(GL_ARRAY_BUFFER, amount * smat4, &models[0], GL_STATIC_DRAW);
@@ -94,11 +95,11 @@ i32 main() {
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, smat4, (void*)0);
 		glEnableVertexAttribArray(4);
-		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, smat4, (void*)smat4);
+		glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, smat4, (void*)svec4);
 		glEnableVertexAttribArray(5);
-		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, smat4, (void*)(2*smat4));
+		glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, smat4, (void*)(2*svec4));
 		glEnableVertexAttribArray(6);
-		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, smat4, (void*)(3*smat4));
+		glVertexAttribPointer(6, 4, GL_FLOAT, GL_FALSE, smat4, (void*)(3*svec4));
 
 		glVertexAttribDivisor(3, 1);
 		glVertexAttribDivisor(4, 1);
