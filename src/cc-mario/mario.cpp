@@ -59,7 +59,7 @@ i32 main() {
 	Model*  marioball  = new Model(files, "marioball/marioball.obj");
 	Model*  monito     = new Model(files, "monito/monito.obj");
 
-	u32 amount = 25000;
+	u32 amount = 2500;
 	glm::mat4* models = new glm::mat4[amount];
 	srand(glfwGetTime());
 	f32 radius = 2.5f;

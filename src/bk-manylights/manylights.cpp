@@ -96,7 +96,7 @@ void processInput(GLFWwindow* window) {
 	}
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+void key_callback(GLFWwindow*, int key, int, int action, int) {
 	if (key == GLFW_KEY_E && action == GLFW_PRESS) {
 		wireframe = !wireframe;
 	}
@@ -118,7 +118,7 @@ void mouse_callback(GLFWwindow* window, f64 xpos, f64 ypos) {
 	}
 }
 
-void scroll_callback(GLFWwindow* window, f64 xoffset, f64 yoffset) {
+void scroll_callback(GLFWwindow*, f64, f64 yoffset) {
 	cam->processScroll((f32)yoffset);
 }
 
@@ -211,7 +211,7 @@ i32 main() {
 
 		shader->setVec3("xyz", cam->getPos());
 
-		shader->ssssetVec3("xyzdl.direction", -0.2f, -1.0f, -0.3f);
+		shader->setVec3("xyzdl.direction", -0.2f, -1.0f, -0.3f);
 		shader->setVec3("xyzdl.ambient", 0.05f, 0.05f, 0.05f);
 		shader->setVec3("xyzdl.diffuse", 0.4f, 0.4f, 0.4f);
 		shader->setVec3("xyzdl.specular", 0.5f, 0.5f, 0.5f);

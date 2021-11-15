@@ -49,8 +49,8 @@ i32 main() {
 	glfwSetCursorPosCallback(window, mouse_callback);
 	glfwSetScrollCallback(window, scroll_callback);
 
-	cam = new Cam({0.0f, 0.0f, 25.0f});
-	cam->speed = 7.5f;
+	cam = new Cam({0.0f, 0.0f, 100.0f});
+	cam->speed = 55.5f;
 
 	Files* files = new Files("bin", "resources/textures", "resources/objects");
 
@@ -59,23 +59,23 @@ i32 main() {
 	Model*  planet = new Model(files, "planet/planet.obj");
 	Model*  rock = new Model(files, "rock/rock.obj");
 
-	u32 amount = 100000;
+	u32 amount = 120000;
 	glm::mat4* models = new glm::mat4[amount];
 	srand(glfwGetTime());
-	f32 radius = 25.0f;
-	f32 offset = 7.5f;
+	f32 radius = 250.0f;
+	f32 offset = 50.0f;
 	for (u32 i = 0; i < amount; ++i) {
 		glm::mat4 model = glm::mat4(1.0f);
 		f32 angle = (f32)i / (f32)amount * 360.0f;
 		f32 displacement = (rand() % (i32)(2 * offset * 100)) / 100.0f - offset;
 		f32 x = sin(angle) * radius + displacement;
 		displacement = (rand() % (i32)(2 * offset * 100)) / 100.0f - offset;
-		f32 y = displacement * 0.4f;
+		f32 y = displacement * 0.05f;
 		displacement = (rand() % (i32)(2 * offset * 100)) / 100.0f - offset;
 		f32 z = cos(angle) * radius + displacement;
 		model = glm::translate(model, {x, y, z});
 
-		f32 scale = (rand() % 10) / 100.0f + 0.05;
+		f32 scale = (rand() % 10) / 250.0f + 0.05;
 		model = glm::scale(model, glm::vec3(scale));
 
 		f32 rotAngle = (rand() % 360);
@@ -137,6 +137,7 @@ i32 main() {
 
 		glm::mat4 model = glm::mat4(1.0f);
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f));
+		model = glm::scale(model, glm::vec3(25.0f, 25.0f, 25.0f));
 		shader->setMat4("model", model);
 		planet->Draw(shader);
 
